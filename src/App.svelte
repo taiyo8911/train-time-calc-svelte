@@ -145,8 +145,8 @@
     <thead>
       <tr>
         <th></th>
-        <th>緩行</th>
-        <th>急行</th>
+        <th>緩行列車の出発時刻</th>
+        <th>急行列車の出発時刻</th>
       </tr>
     </thead>
     <tbody>
