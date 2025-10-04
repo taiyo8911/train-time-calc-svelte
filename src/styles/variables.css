@@ -1,0 +1,46 @@
+:root {
+    /* カラー */
+    --color-primary: #4caf50;
+    --color-primary-dark: #45a049;
+    --color-primary-darker: #1976d2;
+    --color-secondary: #2196f3;
+    --color-text: #333;
+    --color-text-secondary: #555;
+    --color-text-tertiary: #666;
+    --color-border: #ddd;
+    --color-border-hover: #4caf50;
+    --color-bg: #f5f5f5;
+    --color-bg-secondary: #f8f9fa;
+    --color-bg-tertiary: #f9f9f9;
+    --color-bg-selected: #e8f5e9;
+    --color-bg-hover: #f0f8f0;
+    --color-white: white;
+
+    /* スペーシング */
+    --spacing-xs: 8px;
+    --spacing-sm: 10px;
+    --spacing-md: 12px;
+    --spacing-lg: 15px;
+    --spacing-xl: 20px;
+    --spacing-xxl: 30px;
+    --spacing-xxxl: 40px;
+
+    /* ボーダー */
+    --border-radius: 6px;
+    --border-radius-lg: 8px;
+    --border-width: 2px;
+
+    /* シャドウ */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(76, 175, 80, 0.1);
+    --shadow-focus: 0 0 0 3px rgba(76, 175, 80, 0.1);
+
+    /* フォント */
+    --font-size-base: 16px;
+    --font-size-sm: 14px;
+    --font-size-lg: 1.1em;
+    --font-size-xl: 1.3em;
+
+    /* トランジション */
+    --transition-fast: 0.2s;
+}
