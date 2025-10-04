@@ -6,37 +6,26 @@
         kyuukouArrivalTimes,
     } = $props();
 
-    // 到着時刻を分に変換
     function timeToMinutes(timeStr) {
         if (!timeStr) return null;
         const [hours, minutes] = timeStr.split(":").map(Number);
         return hours * 60 + minutes;
     }
 
-    // 各駅でどちらが早いか判定
     function compareArrivalTimes(station) {
-        const kankouTime = timeToMinutes(kankouArrivalTimes[station]);
-        const kyuukouTime = timeToMinutes(kyuukouArrivalTimes[station]);
+        const kankouMin = timeToMinutes(kankouArrivalTimes[station]);
+        const kyuukouMin = timeToMinutes(kyuukouArrivalTimes[station]);
 
-        if (kankouTime === null && kyuukouTime === null) {
-            return { faster: null, difference: 0 };
-        }
-        if (kankouTime === null) {
-            return { faster: "kyuukou", difference: 0 };
-        }
-        if (kyuukouTime === null) {
-            return { faster: "kankou", difference: 0 };
-        }
+        if (kankouMin === null) return { faster: "kyuukou", difference: 0 };
+        if (kyuukouMin === null) return { faster: "kankou", difference: 0 };
 
-        const diff = Math.abs(kankouTime - kyuukouTime);
+        const diff = Math.abs(kankouMin - kyuukouMin);
 
-        if (kankouTime < kyuukouTime) {
-            return { faster: "kankou", difference: diff };
-        } else if (kyuukouTime < kankouTime) {
-            return { faster: "kyuukou", difference: diff };
-        } else {
-            return { faster: "same", difference: 0 };
-        }
+        if (kankouMin === kyuukouMin) return { faster: "same", difference: 0 };
+        return {
+            faster: kankouMin < kyuukouMin ? "kankou" : "kyuukou",
+            difference: diff,
+        };
     }
 </script>
 
@@ -105,7 +94,7 @@
 
 <style>
     .result-section {
-        margin-top: var(--spacing-xxxl);
+        margin-top: 30px;
     }
 
     .result-section h2 {
@@ -124,14 +113,12 @@
     td:nth-child(1) {
         width: 25%;
     }
-
     th:nth-child(2),
     td:nth-child(2),
     th:nth-child(3),
     td:nth-child(3) {
         width: 30%;
     }
-
     th:nth-child(4),
     td:nth-child(4) {
         width: 15%;
@@ -156,23 +143,20 @@
     }
 
     tbody tr:hover {
-        background-color: var(--color-bg-tertiary);
+        background-color: #f9f9f9;
     }
 
-    /* 最速の到着時刻を強調 */
     td.fastest {
         background-color: #e8f5e9;
         font-weight: bold;
         color: #2e7d32;
     }
 
-    /* 遅い方を控えめに */
     td.slower {
         background-color: #fafafa;
         color: #999;
     }
 
-    /* 同時到着 */
     td.same {
         background-color: #fff9e6;
     }
@@ -210,18 +194,15 @@
         font-size: var(--font-size-sm);
     }
 
-    /* レスポンシブ対応 */
     @media (max-width: 600px) {
         th:nth-child(4),
         td:nth-child(4) {
             display: none;
         }
-
         th:nth-child(1),
         td:nth-child(1) {
             width: 30%;
         }
-
         th:nth-child(2),
         td:nth-child(2),
         th:nth-child(3),

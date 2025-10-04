@@ -14,10 +14,8 @@
   let kankouTime = $state("");
   let kyuukouTime = $state("");
 
-  // 選択可能な方向を計算（リアクティブ）
   let availableDirections = $derived(getAvailableDirections(departureStation));
 
-  // 方向が選択不可になった場合、自動的に選択可能な方向に変更
   $effect(() => {
     if (
       !availableDirections.includes(direction) &&
@@ -27,12 +25,10 @@
     }
   });
 
-  // 表示する駅リストを計算（リアクティブ）
   let displayStations = $derived(
     getDisplayStations(departureStation, direction),
   );
 
-  // 到着時刻を計算（リアクティブ）
   let kankouArrivalTimes = $derived(
     calculateArrivalTimes(
       "緩行",
@@ -52,18 +48,16 @@
     ),
   );
 
-  // 時刻が入力されているかチェック
   let hasTimeInput = $derived(kankouTime !== "" || kyuukouTime !== "");
 </script>
 
 <main>
-  <h1>緩急分離運転到着予想システム</h1>
+  <h1>到着時刻予想システム</h1>
 
   <p class="description">
     緩急分離運転線区において、急行と緩行どちらが早く到着するかを比較するシステムです。
   </p>
 
-  <!-- 入力エリア -->
   <section class="input-section">
     <h2 class="section-title">
       <span class="icon">⚙️</span>
@@ -76,7 +70,6 @@
     </div>
   </section>
 
-  <!-- 結果エリア -->
   <section class="result-section">
     <h2 class="section-title">
       <span class="icon">📊</span>
@@ -104,7 +97,7 @@
 <style>
   main {
     background-color: var(--color-white);
-    padding: var(--spacing-xxl);
+    padding: 30px;
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-sm);
   }
@@ -115,20 +108,19 @@
   }
 
   .description {
-    color: var(--color-text-tertiary);
-    margin-bottom: var(--spacing-xxl);
+    color: var(--color-text-muted);
+    margin-bottom: 30px;
   }
 
-  /* セクション */
   .input-section,
   .result-section {
-    margin-bottom: var(--spacing-xxxl);
+    margin-bottom: 40px;
   }
 
   .result-section {
     border-top: 3px solid var(--color-border);
-    padding-top: var(--spacing-xxxl);
-    margin-top: var(--spacing-xxxl);
+    padding-top: 40px;
+    margin-top: 40px;
   }
 
   .section-title {
@@ -151,12 +143,11 @@
     gap: var(--spacing-xl);
   }
 
-  /* 空状態 */
   .empty-state {
     background: var(--color-bg-secondary);
     border: 2px dashed var(--color-border);
     border-radius: var(--border-radius-lg);
-    padding: var(--spacing-xxxl);
+    padding: 40px;
     text-align: center;
     min-height: 300px;
     display: flex;
@@ -173,13 +164,13 @@
 
   .empty-state-title {
     font-size: var(--font-size-xl);
-    color: var(--color-text-secondary);
+    color: var(--color-text-muted);
     font-weight: 600;
     margin-bottom: var(--spacing-sm);
   }
 
   .empty-state-description {
-    color: var(--color-text-tertiary);
+    color: var(--color-text-muted);
     max-width: 400px;
     line-height: 1.6;
   }

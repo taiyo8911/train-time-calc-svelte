@@ -1,42 +1,22 @@
 import { stations, travelTimes } from '../data/travelData.js';
 
-/**
- * 選択可能な方向を取得
- */
 export function getAvailableDirections(departure) {
     const available = [];
-    if (departure !== '千葉') {
-        available.push('千葉方面');
-    }
-    if (departure !== '錦糸町') {
-        available.push('錦糸町方面');
-    }
+    if (departure !== '千葉') available.push('千葉方面');
+    if (departure !== '錦糸町') available.push('錦糸町方面');
     return available;
 }
 
-/**
- * 表示する駅リストを取得
- */
 export function getDisplayStations(departure, direction) {
     const departureIndex = stations.indexOf(departure);
-    const result = [];
 
     if (direction === '千葉方面') {
-        for (let i = departureIndex; i < stations.length; i++) {
-            result.push(stations[i]);
-        }
+        return stations.slice(departureIndex);
     } else {
-        for (let i = departureIndex; i >= 0; i--) {
-            result.push(stations[i]);
-        }
+        return stations.slice(0, departureIndex + 1).reverse();
     }
-
-    return result;
 }
 
-/**
- * 到着時刻を計算
- */
 export function calculateArrivalTimes(trainType, startTime, displayStations, departure, direction) {
     if (!startTime) return {};
 
@@ -55,25 +35,15 @@ export function calculateArrivalTimes(trainType, startTime, displayStations, dep
         const arrivalHours = Math.floor(arrivalTime / 60) % 24;
         const arrivalMinutes = arrivalTime % 60;
 
-        times[station] = `${padZero(arrivalHours)}:${padZero(arrivalMinutes)}`;
+        times[station] = `${String(arrivalHours).padStart(2, '0')}:${String(arrivalMinutes).padStart(2, '0')}`;
     }
 
     return times;
 }
 
-/**
- * 数値を2桁にゼロパディング
- */
-export function padZero(num) {
-    return num < 10 ? '0' + num : num;
-}
-
-/**
- * 現在時刻を取得
- */
 export function getCurrentTime() {
     const now = new Date();
-    const hours = padZero(now.getHours());
-    const minutes = padZero(now.getMinutes());
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
 }
