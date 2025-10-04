@@ -51,27 +51,54 @@
       direction,
     ),
   );
+
+  // 時刻が入力されているかチェック
+  let hasTimeInput = $derived(kankouTime !== "" || kyuukouTime !== "");
 </script>
 
 <main>
-  <h1>到着時刻計算システム</h1>
+  <h1>緩急分離運転到着予想システム</h1>
 
   <p class="description">
     緩急分離運転線区において、急行と緩行どちらが早く到着するかを比較するシステムです。
   </p>
 
-  <div class="card-container">
-    <StationSelector bind:value={departureStation} />
-    <DirectionSelector bind:value={direction} {availableDirections} />
-    <TimeInput bind:kankouTime bind:kyuukouTime />
-  </div>
+  <!-- 入力エリア -->
+  <section class="input-section">
+    <h2 class="section-title">
+      <span class="icon">⚙️</span>
+      条件設定
+    </h2>
+    <div class="card-container">
+      <StationSelector bind:value={departureStation} />
+      <DirectionSelector bind:value={direction} {availableDirections} />
+      <TimeInput bind:kankouTime bind:kyuukouTime />
+    </div>
+  </section>
 
-  <ResultTable
-    {displayStations}
-    {departureStation}
-    {kankouArrivalTimes}
-    {kyuukouArrivalTimes}
-  />
+  <!-- 結果エリア -->
+  <section class="result-section">
+    <h2 class="section-title">
+      <span class="icon">📊</span>
+      計算結果
+    </h2>
+    {#if hasTimeInput}
+      <ResultTable
+        {displayStations}
+        {departureStation}
+        {kankouArrivalTimes}
+        {kyuukouArrivalTimes}
+      />
+    {:else}
+      <div class="empty-state">
+        <div class="empty-state-icon">🕐</div>
+        <p class="empty-state-title">時刻を入力してください</p>
+        <p class="empty-state-description">
+          緩行または急行の出発時刻を入力すると、各駅への到着時刻が表示されます
+        </p>
+      </div>
+    {/if}
+  </section>
 </main>
 
 <style>
@@ -92,10 +119,68 @@
     margin-bottom: var(--spacing-xxl);
   }
 
+  /* セクション */
+  .input-section,
+  .result-section {
+    margin-bottom: var(--spacing-xxxl);
+  }
+
+  .result-section {
+    border-top: 3px solid var(--color-border);
+    padding-top: var(--spacing-xxxl);
+    margin-top: var(--spacing-xxxl);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
+    margin-bottom: var(--spacing-xl);
+    font-weight: 600;
+  }
+
+  .section-title .icon {
+    font-size: 1.2em;
+  }
+
   .card-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--spacing-xl);
-    margin-bottom: var(--spacing-xxl);
+  }
+
+  /* 空状態 */
+  .empty-state {
+    background: var(--color-bg-secondary);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xxxl);
+    text-align: center;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .empty-state-icon {
+    font-size: 4em;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.5;
+  }
+
+  .empty-state-title {
+    font-size: var(--font-size-xl);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .empty-state-description {
+    color: var(--color-text-tertiary);
+    max-width: 400px;
+    line-height: 1.6;
   }
 </style>
