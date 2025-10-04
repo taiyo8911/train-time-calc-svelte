@@ -6,8 +6,6 @@
   let kankouTime = "";
   let kyuukouTime = "";
 
-  let kankouError = "";
-  let kyuukouError = "";
   let directionError = "";
 
   // 表示する駅リストを計算（リアクティブ）
@@ -104,47 +102,13 @@
     kankouTime = currentTime;
     kyuukouTime = currentTime;
   }
-
-  function resetTable() {
-    kankouTime = "";
-    kyuukouTime = "";
-    kankouError = "";
-    kyuukouError = "";
-  }
-
-  function validateAndCalculate() {
-    kankouError = "";
-    kyuukouError = "";
-
-    let hasError = false;
-
-    if (!kankouTime || kankouTime.trim() === "") {
-      kankouError = "時刻を入力してください。";
-      hasError = true;
-    }
-
-    if (!kyuukouTime || kyuukouTime.trim() === "") {
-      kyuukouError = "時刻を入力してください。";
-      hasError = true;
-    }
-
-    if (directionError) {
-      hasError = true;
-    }
-
-    if (hasError) {
-      return;
-    }
-
-    // リアクティブステートメントが自動的に計算するので、ここでは何もしない
-  }
 </script>
 
 <main>
   <h1>緩急分離運転到着予想システム</h1>
 
   <p>
-    緩急分離運転線区においてどちらが早く到着するかを比較できるシステムです。出発駅と方向を選択してボタンを押してください。
+    緩急分離運転線区においてどちらが早く到着するかを比較できるシステムです。出発駅と方向を選択してください。
   </p>
 
   <div class="controls">
@@ -174,8 +138,6 @@
 
     <div class="control-group">
       <button on:click={setCurrentTime}>現在時刻に設定</button>
-      <button on:click={validateAndCalculate}>予測計算</button>
-      <button on:click={resetTable}>リセット</button>
     </div>
   </div>
 
@@ -193,20 +155,10 @@
           <th>{station}</th>
           {#if station === departureStation}
             <td>
-              <div>
-                <input type="time" bind:value={kankouTime} />
-                {#if kankouError}
-                  <span class="error">{kankouError}</span>
-                {/if}
-              </div>
+              <input type="time" bind:value={kankouTime} />
             </td>
             <td>
-              <div>
-                <input type="time" bind:value={kyuukouTime} />
-                {#if kyuukouError}
-                  <span class="error">{kyuukouError}</span>
-                {/if}
-              </div>
+              <input type="time" bind:value={kyuukouTime} />
             </td>
           {:else}
             <td>{kankouArrivalTimes[station] || ""}</td>
