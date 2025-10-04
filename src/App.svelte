@@ -6,22 +6,21 @@
   let kankouTime = "";
   let kyuukouTime = "";
 
-  let directionError = "";
+  // 選択可能な方向を計算（リアクティブ）
+  $: availableDirections = getAvailableDirections(departureStation);
+
+  // 方向が選択不可になった場合、自動的に選択可能な方向に変更
+  $: {
+    if (
+      !availableDirections.includes(direction) &&
+      availableDirections.length > 0
+    ) {
+      direction = availableDirections[0];
+    }
+  }
 
   // 表示する駅リストを計算（リアクティブ）
   $: displayStations = getDisplayStations(departureStation, direction);
-
-  // 方向エラーチェック（リアクティブ）
-  $: {
-    if (
-      (departureStation === "千葉" && direction === "千葉方面") ||
-      (departureStation === "錦糸町" && direction === "錦糸町方面")
-    ) {
-      directionError = "この方向には駅がありません。";
-    } else {
-      directionError = "";
-    }
-  }
 
   // 到着時刻を計算（リアクティブ）
   $: kankouArrivalTimes = calculateArrivalTimes(
@@ -38,6 +37,17 @@
     departureStation,
     direction,
   );
+
+  function getAvailableDirections(departure) {
+    const available = [];
+    if (departure !== "千葉") {
+      available.push("千葉方面");
+    }
+    if (departure !== "錦糸町") {
+      available.push("錦糸町方面");
+    }
+    return available;
+  }
 
   function getDisplayStations(departure, dir) {
     const departureIndex = stations.indexOf(departure);
@@ -107,62 +117,66 @@
 <main>
   <h1>緩急分離運転到着予想システム</h1>
 
-  <p>
+  <p class="description">
     緩急分離運転線区において、急行と緩行どちらが早く到着するかを比較するシステムです。
   </p>
 
-  <div class="controls">
-    <div class="control-group">
-      <label for="departureStation">出発駅:</label>
-      <select id="departureStation" bind:value={departureStation}>
-        {#each stations as station}
-          <option value={station}>{station}</option>
-        {/each}
-      </select>
+  <div class="card-container">
+    <!-- Step 1: 出発駅選択 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="step-number">1</span>
+        <h2>出発駅</h2>
+      </div>
+      <div class="card-content">
+        <select class="large-select" bind:value={departureStation}>
+          {#each stations as station}
+            <option value={station}>{station}</option>
+          {/each}
+        </select>
+      </div>
     </div>
 
-    <div class="control-group">
-      <label>方向:</label>
-      <label>
-        <input type="radio" bind:group={direction} value="千葉方面" />
-        千葉方面
-      </label>
-      <label>
-        <input type="radio" bind:group={direction} value="錦糸町方面" />
-        錦糸町方面
-      </label>
-      {#if directionError}
-        <div class="error">{directionError}</div>
-      {/if}
+    <!-- Step 2: 方向選択 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="step-number">2</span>
+        <h2>行き先方面</h2>
+      </div>
+      <div class="card-content">
+        <div class="direction-buttons">
+          {#each availableDirections as dir}
+            <label class="direction-button" class:selected={direction === dir}>
+              <input type="radio" bind:group={direction} value={dir} />
+              <span>{dir}</span>
+            </label>
+          {/each}
+        </div>
+      </div>
     </div>
 
-    <div class="control-group">
-      <button on:click={setCurrentTime}>現在時刻に設定</button>
-    </div>
-  </div>
-
-  <div class="input-section">
-    <h2>出発時刻を入力</h2>
-    <table class="input-table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>緩行</th>
-          <th>急行</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>{departureStation}発</th>
-          <td>
+    <!-- Step 3: 出発時刻入力 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="step-number">3</span>
+        <h2>出発時刻</h2>
+      </div>
+      <div class="card-content">
+        <button class="current-time-btn" on:click={setCurrentTime}>
+          現在時刻に設定
+        </button>
+        <div class="time-inputs">
+          <div class="time-input-group">
+            <label>緩行</label>
             <input type="time" bind:value={kankouTime} />
-          </td>
-          <td>
+          </div>
+          <div class="time-input-group">
+            <label>急行</label>
             <input type="time" bind:value={kyuukouTime} />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="result-section">
@@ -191,57 +205,213 @@
 </main>
 
 <style>
+  /* グローバルスタイル */
   :global(body) {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, sans-serif;
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+    background-color: #f5f5f5;
+
+    /* app.cssから移行 */
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :global(#app) {
+    width: 100%;
+  }
+
+  /* 既存のスタイルをそのまま維持 */
+  main {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   h1 {
     color: #333;
+    margin-bottom: 10px;
+  }
+
+  .description {
+    color: #666;
+    margin-bottom: 30px;
   }
 
   h2 {
     color: #555;
-    font-size: 1.3em;
-    margin-top: 30px;
-    margin-bottom: 15px;
+    font-size: 1.1em;
+    margin: 0;
   }
 
-  .input-section {
-    margin: 30px 0;
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .card {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .card:hover {
+    border-color: #4caf50;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.1);
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .step-number {
+    background: rgba(255, 255, 255, 0.3);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  .card-content {
+    padding: 20px;
+  }
+
+  .large-select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .large-select:hover {
+    border-color: #4caf50;
+  }
+
+  .large-select:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+  }
+
+  .direction-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .direction-button {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+  }
+
+  .direction-button:hover {
+    border-color: #4caf50;
+    background: #f0f8f0;
+  }
+
+  .direction-button.selected {
+    border-color: #4caf50;
+    background: #e8f5e9;
+    font-weight: bold;
+  }
+
+  .direction-button input[type="radio"] {
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  .direction-button span {
+    font-size: 16px;
+  }
+
+  .current-time-btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+
+  .current-time-btn:hover {
+    background-color: #1976d2;
+  }
+
+  .time-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .time-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .time-input-group label {
+    font-weight: bold;
+    min-width: 60px;
+    color: #555;
+  }
+
+  .time-input-group input[type="time"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    transition: border-color 0.2s;
+  }
+
+  .time-input-group input[type="time"]:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
   }
 
   .result-section {
-    margin: 30px 0;
+    margin-top: 40px;
   }
 
-  .controls {
-    margin: 20px 0;
-  }
-
-  .control-group {
-    margin: 15px 0;
-  }
-
-  label {
-    margin-right: 10px;
-  }
-
-  button {
-    padding: 8px 16px;
-    margin-right: 10px;
-    cursor: pointer;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-  }
-
-  button:hover {
-    background-color: #45a049;
+  .result-section h2 {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    color: #333;
   }
 
   table {
@@ -264,19 +434,23 @@
 
   th,
   td {
-    border: 1px solid black;
-    padding: 8px;
+    border: 1px solid #ddd;
+    padding: 12px;
     text-align: left;
   }
 
-  .error {
-    color: red;
-    display: block;
-    margin-top: 5px;
+  thead th {
+    background-color: #4caf50;
+    color: white;
+    font-weight: bold;
   }
 
-  input[type="time"] {
-    padding: 4px;
-    font-size: 14px;
+  tbody th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+
+  tbody tr:hover {
+    background-color: #f9f9f9;
   }
 </style>
