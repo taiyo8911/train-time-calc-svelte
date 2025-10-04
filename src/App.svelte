@@ -141,33 +141,53 @@
     </div>
   </div>
 
-  <table id="timeTable">
-    <thead>
-      <tr>
-        <th></th>
-        <th>緩行列車の出発時刻</th>
-        <th>急行列車の出発時刻</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each displayStations as station}
+  <div class="input-section">
+    <h2>出発時刻を入力</h2>
+    <table class="input-table">
+      <thead>
         <tr>
-          <th>{station}</th>
-          {#if station === departureStation}
-            <td>
-              <input type="time" bind:value={kankouTime} />
-            </td>
-            <td>
-              <input type="time" bind:value={kyuukouTime} />
-            </td>
-          {:else}
-            <td>{kankouArrivalTimes[station] || ""}</td>
-            <td>{kyuukouArrivalTimes[station] || ""}</td>
-          {/if}
+          <th></th>
+          <th>緩行</th>
+          <th>急行</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <tr>
+          <th>{departureStation}発</th>
+          <td>
+            <input type="time" bind:value={kankouTime} />
+          </td>
+          <td>
+            <input type="time" bind:value={kyuukouTime} />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="result-section">
+    <h2>到着時刻</h2>
+    <table class="result-table">
+      <thead>
+        <tr>
+          <th>駅</th>
+          <th>緩行</th>
+          <th>急行</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each displayStations as station}
+          {#if station !== departureStation}
+            <tr>
+              <th>{station}</th>
+              <td>{kankouArrivalTimes[station] || ""}</td>
+              <td>{kyuukouArrivalTimes[station] || ""}</td>
+            </tr>
+          {/if}
+        {/each}
+      </tbody>
+    </table>
+  </div>
 </main>
 
 <style>
@@ -181,6 +201,21 @@
 
   h1 {
     color: #333;
+  }
+
+  h2 {
+    color: #555;
+    font-size: 1.3em;
+    margin-top: 30px;
+    margin-bottom: 15px;
+  }
+
+  .input-section {
+    margin: 30px 0;
+  }
+
+  .result-section {
+    margin: 30px 0;
   }
 
   .controls {
@@ -217,14 +252,11 @@
 
   th:nth-child(1),
   td:nth-child(1) {
-    width: 15%;
+    width: 30%;
   }
 
   th:nth-child(2),
-  td:nth-child(2) {
-    width: 35%;
-  }
-
+  td:nth-child(2),
   th:nth-child(3),
   td:nth-child(3) {
     width: 35%;
