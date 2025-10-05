@@ -22,12 +22,15 @@
     .large-select {
         width: 100%;
         padding: var(--spacing-md);
-        font-size: var(--font-size-base);
+        /* 16px以上に設定して自動拡大を防ぐ */
+        font-size: 16px;
         border: var(--border-width) solid var(--color-border);
         border-radius: var(--border-radius);
         background: var(--color-white);
         cursor: pointer;
         transition: border-color var(--transition-fast);
+        /* タッチデバイスでの拡大を防ぐ */
+        touch-action: manipulation;
     }
 
     .large-select:hover {

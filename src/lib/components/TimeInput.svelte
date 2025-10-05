@@ -99,6 +99,8 @@
         border-radius: var(--border-radius);
         font-size: var(--font-size-sm);
         transition: background-color var(--transition-fast);
+        /* タッチデバイスでの拡大を防ぐ */
+        touch-action: manipulation;
     }
 
     .current-time-btn:hover {
@@ -126,10 +128,13 @@
     .time-input-group input[type="time"] {
         width: 100%;
         padding: var(--spacing-sm);
-        font-size: var(--font-size-base);
+        /* 16px以上に設定して自動拡大を防ぐ */
+        font-size: 16px;
         border: var(--border-width) solid var(--color-border);
         border-radius: var(--border-radius);
         transition: border-color var(--transition-fast);
+        /* タッチデバイスでの拡大を防ぐ */
+        touch-action: manipulation;
     }
 
     .time-input-group input[type="time"]:focus {
@@ -145,15 +150,18 @@
 
     .quick-btn {
         flex: 1;
-        padding: 6px 8px;
+        padding: 8px 10px;
         background-color: #f0f0f0;
         color: var(--color-text-muted);
         border: 1px solid var(--color-border);
         border-radius: var(--border-radius);
-        font-size: 12px;
+        /* 16px以上に設定して自動拡大を防ぐ */
+        font-size: 14px;
         cursor: pointer;
         transition: all var(--transition-fast);
         font-weight: 500;
+        /* タッチデバイスでの拡大を防ぐ */
+        touch-action: manipulation;
     }
 
     .quick-btn:hover {
@@ -180,8 +188,9 @@
 
     @media (max-width: 600px) {
         .quick-btn {
-            font-size: 11px;
-            padding: 5px 6px;
+            /* スマホでも14px以上を維持 */
+            font-size: 14px;
+            padding: 8px 8px;
         }
     }
 </style>

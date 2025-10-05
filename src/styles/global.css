@@ -19,6 +19,13 @@ body {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* テキストの自動拡大を防ぐ */
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* タップハイライトを無効化（オプション） */
+    -webkit-tap-highlight-color: transparent;
 }
 
 #app {
