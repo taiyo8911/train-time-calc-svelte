@@ -31,53 +31,52 @@
         <h2>出発時刻</h2>
     </div>
     <div class="card-content">
-        <button class="current-time-btn" on:click={setCurrentTime}>
+        <button class="current-time-btn" onclick={setCurrentTime}>
             両方とも現在時刻に設定
         </button>
 
         <div class="time-inputs">
             <div class="time-input-group">
-                <label>緩行</label>
-                <input type="time" bind:value={kankouTime} />
+                <label for="kankou-time">緩行</label>
+                <input type="time" id="kankou-time" bind:value={kankouTime} />
                 <div class="quick-buttons">
                     <button
                         class="quick-btn adjust-btn"
-                        on:click={() =>
+                        onclick={() =>
                             (kankouTime = adjustTime(kankouTime, -1))}
                         >-1分</button
                     >
                     <button
                         class="quick-btn now-btn"
-                        on:click={() => (kankouTime = addMinutes(0))}
+                        onclick={() => (kankouTime = addMinutes(0))}
                         >現在</button
                     >
                     <button
                         class="quick-btn adjust-btn"
-                        on:click={() =>
-                            (kankouTime = adjustTime(kankouTime, 1))}
+                        onclick={() => (kankouTime = adjustTime(kankouTime, 1))}
                         >+1分</button
                     >
                 </div>
             </div>
 
             <div class="time-input-group">
-                <label>急行</label>
-                <input type="time" bind:value={kyuukouTime} />
+                <label for="kyuukou-time">急行</label>
+                <input type="time" id="kyuukou-time" bind:value={kyuukouTime} />
                 <div class="quick-buttons">
                     <button
                         class="quick-btn adjust-btn"
-                        on:click={() =>
+                        onclick={() =>
                             (kyuukouTime = adjustTime(kyuukouTime, -1))}
                         >-1分</button
                     >
                     <button
                         class="quick-btn now-btn"
-                        on:click={() => (kyuukouTime = addMinutes(0))}
+                        onclick={() => (kyuukouTime = addMinutes(0))}
                         >現在</button
                     >
                     <button
                         class="quick-btn adjust-btn"
-                        on:click={() =>
+                        onclick={() =>
                             (kyuukouTime = adjustTime(kyuukouTime, 1))}
                         >+1分</button
                     >
@@ -123,6 +122,7 @@
         font-weight: bold;
         color: var(--color-text-muted);
         font-size: var(--font-size-sm);
+        cursor: pointer;
     }
 
     .time-input-group input[type="time"] {
